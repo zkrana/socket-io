@@ -1,14 +1,14 @@
-// server.js
-const { Server } = require("socket.io");
 const http = require("http");
+const { Server } = require("socket.io");
 
-// Create HTTP server
-const server = http.createServer();
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { "Content-Type": "text/plain" });
+  res.end("Socket.IO server is running");
+});
 
-// Initialize Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: process.env.CORS_ORIGIN || "*", // set your Vercel domain in Railway ENV
+    origin: "*", // restrict to Vercel later
     methods: ["GET", "POST"],
   },
 });
@@ -16,9 +16,8 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log("Client connected");
 
-  // Listen for typing events
   socket.on("typing", (data) => {
-    socket.broadcast.emit("typing", data); // send to everyone except sender
+    socket.broadcast.emit("typing", data);
   });
 
   socket.on("disconnect", () => {
@@ -26,7 +25,6 @@ io.on("connection", (socket) => {
   });
 });
 
-// Listen on Railway-provided port or fallback for local dev
 const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => {
   console.log(`Socket.IO server running on port ${PORT}`);
