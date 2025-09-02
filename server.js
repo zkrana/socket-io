@@ -1,11 +1,11 @@
 // server.js
-import { Server } from "socket.io";
-import http from "http";
+const { Server } = require("socket.io");
+const http = require("http");
 
-const server = http.createServer(); // basic HTTP server
+const server = http.createServer();
 const io = new Server(server, {
   cors: {
-    origin: "*", // 🔒 later restrict to your Vercel domain
+    origin: "*", // later restrict to Vercel domain
     methods: ["GET", "POST"],
   },
 });
@@ -14,7 +14,6 @@ io.on("connection", (socket) => {
   console.log("Client connected");
 
   socket.on("typing", (data) => {
-    // broadcast to everyone except sender
     socket.broadcast.emit("typing", data);
   });
 
@@ -23,7 +22,6 @@ io.on("connection", (socket) => {
   });
 });
 
-// Railway will assign PORT dynamically
 const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {
   console.log(`Socket.IO server running on port ${PORT}`);
