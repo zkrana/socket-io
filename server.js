@@ -8,7 +8,7 @@ const server = http.createServer((req, res) => {
 
 const io = new Server(server, {
   cors: {
-    origin: "*", // restrict to Vercel later
+    origin: "https://lyzerasana.vercel.app/", // restrict to Vercel later
     methods: ["GET", "POST"],
   },
 });
